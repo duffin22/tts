@@ -50,7 +50,7 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
             sRectPaint = new Paint();
             sRectPaint.setColor(BORDER_COLOR);
             sRectPaint.setStyle(Paint.Style.STROKE);
-            sRectPaint.setStrokeWidth(6.0f);
+            sRectPaint.setStrokeWidth(8.0f);
         }
 
         if (sTextPaint == null) {
