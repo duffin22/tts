@@ -26,7 +26,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
-import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
@@ -42,10 +41,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.CameraSource;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.CameraSourcePreview;
-import com.google.android.gms.samples.vision.ocrreader.ui.camera.DetailActivity;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.GraphicOverlay;
 import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
@@ -55,6 +52,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * Activity for the Ocr Detecting app.  This app detects text and displays the value with the
@@ -331,36 +329,63 @@ public final class OcrCaptureActivity extends AppCompatActivity {
      * @param rawY - the raw position of the tap.
      * @return true if the tap was on a TextBlock
      */
-    private boolean onTap(float rawX, float rawY) {
-        // TODO: Speak the text when the user taps on screen.
-        OcrGraphic graphic = mGraphicOverlay.getGraphicAtLocation(rawX, rawY);
-        TextBlock text = null;
-        if (graphic != null) {
-            text = graphic.getTextBlock();
+//    private boolean onTap(float rawX, float rawY) {
+//        // TODO: Speak the text when the user taps on screen.
+//        OcrGraphic graphic = mGraphicOverlay.getGraphicAtLocation(rawX, rawY);
+//        TextBlock text = null;
+//        if (graphic != null) {
+//            text = graphic.getTextBlock();
+//
+//            if (text != null && text.getValue() != null) {
+//                Log.d(TAG, "text data is being spoken! " + text.getValue());
+//                // Speak the string.
+////                tts.speak(text.getValue(), TextToSpeech.QUEUE_ADD, null, "DEFAULT");
+//              List<? extends Text> listy = text.getComponents();
+//              ArrayList<String> arrayListy = new ArrayList<>();
+//              int listSize = listy.size();
+//              for (int i = 0; i < listSize; i++) {
+//                String line = listy.get(i).getValue();
+//                arrayListy.add(line);
+//              }
+//              Intent i = new Intent(OcrCaptureActivity.this, DetailActivity.class);
+//              i.putStringArrayListExtra("list",arrayListy);
+//              startActivity(i);
+//            }
+//            else {
+//                Log.d(TAG, "text data is null");
+//            }
+//        }
+//        else {
+//            Log.d(TAG,"no text detected");
+//        }
+//        return text != null;
+//    }
 
-            if (text != null && text.getValue() != null) {
-                Log.d(TAG, "text data is being spoken! " + text.getValue());
-                // Speak the string.
-//                tts.speak(text.getValue(), TextToSpeech.QUEUE_ADD, null, "DEFAULT");
-              List<? extends Text> listy = text.getComponents();
-              ArrayList<String> arrayListy = new ArrayList<>();
-              int listSize = listy.size();
-              for (int i = 0; i < listSize; i++) {
-                String line = listy.get(i).getValue();
-                arrayListy.add(line);
-              }
-              Intent i = new Intent(OcrCaptureActivity.this, DetailActivity.class);
-              i.putStringArrayListExtra("list",arrayListy);
+    private boolean onTap(float rawX, float rawY) {
+      Set<OcrGraphic> objects = mGraphicOverlay.getAllGraphics();
+      StringBuilder stringyB = new StringBuilder();
+      for (OcrGraphic ocg:objects) {
+        if (ocg != null) {
+          TextBlock textyB = ocg.getTextBlock();
+          if (textyB != null && textyB.getValue() != null) {
+            List<? extends Text> listy = textyB.getComponents();
+            int listSize = listy.size();
+            for (int i = 0; i < listSize; i++) {
+              stringyB.append(listy.get(i).getValue());
+              stringyB.append(System.getProperty("line.separator"));
+            }
+          }
+        }
+        stringyB.append(System.getProperty("line.separator"));
+        stringyB.append("******");
+        stringyB.append(System.getProperty("line.separator"));
+      }
+
+      Intent i = new Intent(OcrCaptureActivity.this, DetailActivity.class);
+              i.putExtra("sb",stringyB.toString());
               startActivity(i);
-            }
-            else {
-                Log.d(TAG, "text data is null");
-            }
-        }
-        else {
-            Log.d(TAG,"no text detected");
-        }
-        return text != null;
+
+      return stringyB.length() > 0;
     }
 
     private class CaptureGestureListener extends GestureDetector.SimpleOnGestureListener {

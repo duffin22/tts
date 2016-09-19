@@ -1,4 +1,4 @@
-package com.google.android.gms.samples.vision.ocrreader.ui.camera;
+package com.google.android.gms.samples.vision.ocrreader;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,18 +18,20 @@ public class DetailActivity extends Activity {
     setContentView(R.layout.activity_detail);
 
     Intent i = getIntent();
-    ArrayList<String> listy = i.getStringArrayListExtra("list");
-
+//    ArrayList<String> listy = i.getStringArrayListExtra("list");
+//
     TextView textyView = (TextView) findViewById(R.id.detail_activity_text_view);
-    StringBuilder stringyB = new StringBuilder();
-    for (String s: listy) {
-      String str = s.replaceAll("[^.0-9]+", " ");
-      String[] val = str.split(" ");
-      stringyB.append(s);
-      stringyB.append(System.getProperty("line.separator"));
-    }
+//    StringBuilder stringyB = new StringBuilder();
+//    for (String s: listy) {
+//      String str = s.replaceAll("[^.0-9]+", " ");
+//      String[] val = str.split(" ");
+//      stringyB.append(s);
+//      stringyB.append(System.getProperty("line.separator"));
+//    }
 
-    textyView.setText(stringyB);
+    String text = i.getStringExtra("sb");
+
+    textyView.setText(text);
 
   }
 }

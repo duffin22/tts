@@ -15,6 +15,7 @@
  */
 package com.google.android.gms.samples.vision.ocrreader;
 
+import android.graphics.Point;
 import android.util.Log;
 import android.util.SparseArray;
 
